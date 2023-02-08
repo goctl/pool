@@ -23,9 +23,6 @@ import (
 )
 
 const (
-	// DialTimeout the timeout of create connection
-	DialTimeout = 5 * time.Second
-
 	// BackoffMaxDelay provided maximum delay when backing off after failed connection attempts.
 	BackoffMaxDelay = 3 * time.Second
 
@@ -84,9 +81,12 @@ var DefaultOptions = Options{
 	Reuse:                true,
 }
 
+// dialTimeout the timeout of create connection
+var dialTimeout time.Duration = 5 * time.Second
+
 // Dial return a grpc connection with defined configurations.
 func Dial(address string) (*grpc.ClientConn, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), DialTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), dialTimeout)
 	defer cancel()
 	return grpc.DialContext(ctx, address, grpc.WithInsecure(),
 		grpc.WithBackoffMaxDelay(BackoffMaxDelay),
@@ -103,7 +103,13 @@ func Dial(address string) (*grpc.ClientConn, error) {
 
 // DialTest return a simple grpc connection with defined configurations.
 func DialTest(address string) (*grpc.ClientConn, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), DialTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), dialTimeout)
 	defer cancel()
 	return grpc.DialContext(ctx, address, grpc.WithInsecure())
+}
+
+func WithDialTimeout(timeout time.Duration) {
+	if timeout > 0 {
+		dialTimeout = timeout
+	}
 }
