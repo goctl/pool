@@ -18,12 +18,12 @@ Import package:
 
 ```
 import (
-    "github.com/shimingyah/pool"
+    "github.com/goctl/pool"
 )
 ```
 
 ```
-go get github.com/shimingyah/pool
+go get github.com/goctl/pool
 ```
 
 # Usage
